@@ -1,0 +1,288 @@
+
+<html>
+  <head>
+     <title>Stars Rating test</title>
+<link rel="stylesheet" href="css/fontawesome-5.15.3-web/css/fontawesome.min.css">
+<!--    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">--> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>  
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<style>
+.container{
+    margin:50px auto;
+}
+header{ margin:50px;}
+.headline {
+    text-align:center;
+}
+.g-rating,
+.rating {
+    float:left;
+}
+legend{ font-size:16px;}
+/* :not(:checked) is a filter, so that browsers that don’t support :checked don’t 
+   follow these rules. Every browser that supports :checked also supports :not(), so
+   it doesn’t make the test unnecessarily selective */
+.g-rating:not(:checked) >input,   
+.rating:not(:checked) > input {
+    position:absolute;
+    top:-9999px;
+    clip:rect(0,0,0,0);
+}
+.g-rating:not(:checked) > label,
+.rating:not(:checked) > label {
+    float:right;
+    width:1em;
+    padding:0 .1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:200%;
+    line-height:1.2;
+    color:#ddd;
+
+}
+.g-rating:not(:checked) > label{
+    cursor: not-allowed;
+}
+.g-rating input[type=radio]+label:before,
+.rating input[type=radio]+label:before {  
+       /* content: "\f005";  */
+        letter-spacing: 10px;  
+		color:grey;
+    }  
+/*.rating:not(:checked) > label:before {
+    /*content: '★';*/
+	 /* content: "\f005";*/
+/*}*/
+
+
+input[type=radio].with-font:focus + label:before {
+    font-weight: bold;
+    color:orange;
+}
+.g-rating > input:checked ~ label ,
+.rating > input:checked ~ label {
+    color: gold;
+
+}
+
+
+.rating:not(:checked) > label:hover,
+.rating:not(:checked) > label:hover ~ label {
+
+    color: gold;
+    text-shadow:1px 1px goldenrod, 2px 2px #B57340, .1em .1em .2em rgba(0,0,0,.05);
+}
+
+.rating > input:checked + label:hover,
+.rating > input:checked + label:hover ~ label,
+.rating > input:checked ~ label:hover,
+.rating > input:checked ~ label:hover ~ label,
+.rating > label:hover ~ input:checked ~ label {
+    color: #ea0;
+    text-shadow:1px 1px goldenrod, 2px 2px #B57340, .1em .1em .2em rgba(0,0,0,.5);
+}
+
+.rating > label:active {
+    position:relative;
+    top:2px;
+    left:2px;
+}
+
+/* end of Lea's code */
+
+/*
+ * Clearfix from html5 boilerplate
+ */
+
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+
+.clearfix {
+    *zoom: 1;
+}
+
+/* my stuff */
+#status, button {
+    margin: 20px 0;
+}
+
+.button {
+  background-color: #008CBA; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 28px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 2px double #008CBA;
+}
+
+.button1 {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #008CBA;
+}
+
+.button:hover {
+  background-color: #008CBA;
+  color: white;
+}
+
+</style>
+<script>
+
+    window.addEventListener('load', (event) => {
+        console.log('page is fully loaded');
+        //parameter rating
+        var p_rating="";
+        var items= window.location.search.substr(1);
+        console.log(items);//returns rating=#
+       
+        //split the elem
+        for (var index = 0; index < items.length; index++) {
+            tmp = items.split("=");
+            console.log(tmp);
+            if (tmp[0] === "rating") 
+                var values = tmp[1].split("&")
+                p_rating = decodeURIComponent(values[0]);
+                console.log(values);
+            if(values[1]==="votes") p_votes = decodeURIComponent(tmp[2]);
+        }
+        
+        //means its a decimal and will fail the element find.
+        if(p_rating % 1 != 0){
+            //trim the decimal and compare for a 1/2 star addition  or not
+            var rate = p_rating.split(".");
+            
+            //to add to
+            var rateWhole=rate[0];
+            console.log(rateWhole);
+            //to compare to
+            var rateDecimal = rate[1];
+            console.log(rateDecimal);
+            
+            if(rateDecimal.length == 1){ //is one digit it is a 2, 3, 4, 5 ,6 append a 0 to it to satisfy the conditions 
+                rateDecimal = rateDecimal + 0; 
+               
+            }
+            
+            var sum = eval(rateWhole)+eval(1);
+            
+            //conditions
+            if ( (rateDecimal > 50 ) && (rateDecimal <= 99) )//  gets  stroke half star 
+            { 
+                //star-half   star-half-alt    
+                 var id= "gstarfa" + sum;
+                console.log(id);
+                var classLt = document.getElementById(id).classList;
+                console.log(classLt);
+                
+                classLt.remove("fa-star"); //<i class="fas fa-star-half "></i>
+                classLt.add("fa-star-half");//stroke half star 
+                document.getElementById(id).style = "color:gold;"
+            
+            }
+            
+            var gstar= "gstar"+ rateWhole;
+            var gstarNext = "gstar" + sum;
+            console.log(gstar + " " + gstarNext);
+            document.getElementById(gstar).checked=true; //5
+            document.getElementById('votes').innerHTML = " Out of "+ p_votes + " votes";
+            
+        }else{
+            //radio buttons to set as checked
+            var gstar= "gstar"+ p_rating;
+            console.log(gstar);
+            document.getElementById(gstar).checked=true; //5
+            document.getElementById('votes').innerHTML = " Out of "+ p_votes + " votes";
+        }
+    });
+    
+</script>
+  </head>
+  <body> 
+  <div class="container">
+      <header>
+           <div class="headline"><h3>Star Rating System</h3></div>
+      </header>
+    <div class="row">
+        <div class="container">
+             <div class="row">
+           
+                <div class="col-sm-6">
+                    <div><h5>How did we do today?</h5></div>
+                     <div id="status"></div>
+                <form id="ratingForm" action="test2.php" method="Post">
+                   <input type="hidden" name="username" value="username" />
+                   <input type="hidden" name="prod"  value="prod" />
+                    <fieldset class="rating">
+                        <legend>Please rate:</legend>
+                        <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!"><i class="fa fa-star"></i></label>
+                        <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good"><i class="fa fa-star"></i></label>
+                        <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh"><i class="fa fa-star"></i></label>
+                        <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad"><i class="fa fa-star"></i></label>
+                        <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Sucks big time"><i class="fa fa-star"></i></label>
+                    </fieldset>
+                    <div class="clearfix"></div>
+                    <button class="button button1 clearfix">Rate</button>
+                </form>
+                
+                </div>
+                
+                <div class="col-sm-6">
+                    <div><h5>Global Rating</h5></div>
+                    <fieldset class="g-rating">
+                        <legend>Rating <span id='votes'></span></legend>
+                        <input type="radio" id="gstar5" name="gstar5" value="5" readonly /><label for="gstar5" title="Rocks!"><i id="gstarfa5" class="fa fa-star"></i></label>
+                        <input type="radio" id="gstar4" name="gstar4" value="4" readonly /><label for="gstar4" title="Pretty good"><i  id="gstarfa4" class="fa fa-star"></i></label>
+                        <input type="radio" id="gstar3" name="gstar3" value="3" readonly /><label for="gstar3" title="Meh"><i  id="gstarfa3" class="fa fa-star"></i></label>
+                        <input type="radio" id="gstar2" name="gstar2" value="2" readonly /><label for="gstar2" title="Kinda bad"><i  id="gstarfa2" class="fa fa-star"></i></label>
+                        <input type="radio" id="gstar1" name="gstar1" value="1" readonly /><label for="gstar1" title="Sucks big time"><i  id="gstarfa1" class="fa fa-star"></i></label>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div><!-- container -->
+<script>
+$(document).ready(function() {
+    $("form#ratingForm").submit(function(e) 
+    {
+         // prevent the default click action from being performed
+        if ($("#ratingForm :radio:checked").length == 0) {
+            $('#status').html("nothing checked");
+            e.preventDefault();
+            return false;
+        } else {
+            $('#status').html( 'You picked ' + $('input:radio[name=rating]:checked').val() );
+            return true;
+        }
+    });
+});
+
+</script>
+  </body>
+</html>
